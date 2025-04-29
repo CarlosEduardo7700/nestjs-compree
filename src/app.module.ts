@@ -7,6 +7,7 @@ import { FiltroDeExcecaoGlobal } from './recursos/filtros/filtro-de-excecao-glob
 import { PedidoModule } from './modules/pedido/pedido.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
 import { ProdutoModule } from './modules/produto/produto.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProdutoModule } from './modules/produto/produto.module';
       inject: [PostgresConfigService],
     }),
     PedidoModule,
+    CacheModule.register({ isGlobal: true, ttl: 10000 }),
   ],
   providers: [
     {
