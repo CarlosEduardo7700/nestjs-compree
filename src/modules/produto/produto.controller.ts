@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -12,11 +13,16 @@ import {
 import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
 import { CriaProdutoDTO } from './dto/CriaProduto.dto';
 import { ProdutoService } from './produto.service';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { ListaProdutoDTO } from './dto/ListaProduto.dto';
 
 @Controller('produtos')
 export class ProdutoController {
-  constructor(private readonly produtoService: ProdutoService) {}
+  constructor(
+    private readonly produtoService: ProdutoService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   @Post()
   async criaNovo(@Body() dadosProduto: CriaProdutoDTO) {
@@ -33,11 +39,19 @@ export class ProdutoController {
   @Get('/:id')
   @UseInterceptors(CacheInterceptor)
   async listaUm(@Param('id') id: string) {
-    const produtoSalvo = await this.produtoService.listaUmProduto(id);
+    let produto = await this.cacheManager.get<ListaProdutoDTO>(`produto-${id}`);
+
+    if (!produto) {
+      produto = await this.produtoService.listaUmProduto(id);
+      await this.cacheManager.set(`produto-${id}`, produto);
+    }
 
     console.log('Produto sendo buscado do BD!');
 
-    return produtoSalvo;
+    return {
+      produto: produto,
+      message: 'Produto obtido com sucesso!',
+    };
   }
 
   @Get()
