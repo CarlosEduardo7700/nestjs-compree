@@ -37,7 +37,6 @@ export class ProdutoController {
   }
 
   @Get('/:id')
-  @UseInterceptors(CacheInterceptor)
   async listaUm(@Param('id') id: string) {
     let produto = await this.cacheManager.get<ListaProdutoDTO>(`produto-${id}`);
 
