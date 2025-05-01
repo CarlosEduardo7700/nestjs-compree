@@ -22,14 +22,10 @@ export class UsuarioController {
     @Body() { senha, ...dadosDoUsuario }: CriaUsuarioDTO,
     @Body('senha', HashearSenhaPipe) senhaHasheada: string,
   ) {
-    console.log(senhaHasheada);
-
     const usuarioCriado = await this.usuarioService.criaUsuario({
       ...dadosDoUsuario,
       senha: senhaHasheada,
     });
-
-    console.log(usuarioCriado);
 
     return {
       usuario: new ListaUsuarioDTO(usuarioCriado.id, usuarioCriado.nome),
