@@ -9,6 +9,7 @@ import { UsuarioModule } from './modules/usuario/usuario.module';
 import { ProdutoModule } from './modules/produto/produto.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { AutenticacaoModule } from './modules/autenticacao/autenticacao.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { redisStore } from 'cache-manager-redis-yet';
       }),
       isGlobal: true,
     }),
+    AutenticacaoModule,
   ],
   providers: [
     {
