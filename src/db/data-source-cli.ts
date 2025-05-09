@@ -3,12 +3,13 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  url: process.env.DB_URL,
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   migrations: [__dirname + '/migrations/*.{js,ts}'],
-  ssl: {
-    rejectUnauthorized: false,
-  },
 };
 
 const dataSource = new DataSource(dataSourceOptions);
